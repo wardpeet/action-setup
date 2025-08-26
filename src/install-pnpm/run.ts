@@ -21,6 +21,25 @@ export async function runSelfInstaller(inputs: Inputs): Promise<number> {
 
   console.log(__dirname, "pnpm.cjs");
   console.log(dest);
+
+  const configCp = spawn(
+    execPath,
+    [path.join(__dirname, "pnpm.cjs"), "config", "set", "registry", registry],
+    {
+      cwd: dest,
+      stdio: ["pipe", "inherit", "inherit"],
+    }
+  );
+
+  const exitCodeConfig = await new Promise<number>((resolve, reject) => {
+    configCp.on("error", reject);
+    configCp.on("close", resolve);
+  });
+
+  if (exitCodeConfig !== 0) {
+    return exitCodeConfig;
+  }
+
   // prepare target pnpm
   const target = await readTarget({ version, packageJsonFile, standalone });
   const cp = spawn(
