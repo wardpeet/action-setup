@@ -9,7 +9,7 @@ import { Inputs } from '../inputs'
 import YAML from 'yaml'
 
 export async function runSelfInstaller(inputs: Inputs): Promise<number> {
-  const { version, dest, packageJsonFile, standalone } = inputs
+  const { version, dest, packageJsonFile, standalone, registry } = inputs
 
   // prepare self install
   await rm(dest, { recursive: true, force: true })
@@ -21,7 +21,7 @@ export async function runSelfInstaller(inputs: Inputs): Promise<number> {
 
   // prepare target pnpm
   const target = await readTarget({ version, packageJsonFile, standalone })
-  const cp = spawn(execPath, [path.join(__dirname, 'pnpm.cjs'), 'install', target, '--no-lockfile'], {
+  const cp = spawn(execPath, [path.join(__dirname, 'pnpm.cjs'), 'install', target, '--no-lockfile', '--registry', registry], {
     cwd: dest,
     stdio: ['pipe', 'inherit', 'inherit'],
   })

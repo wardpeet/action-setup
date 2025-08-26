@@ -8,6 +8,7 @@ export interface Inputs {
   readonly runInstall: RunInstall[]
   readonly packageJsonFile: string
   readonly standalone: boolean
+  readonly registry: string
 }
 
 const options: InputOptions = {
@@ -22,6 +23,7 @@ export const getInputs = (): Inputs => ({
   runInstall: parseRunInstall('run_install'),
   packageJsonFile: parseInputPath('package_json_file'),
   standalone: getBooleanInput('standalone'),
+  registry: getInput('registry'),
 })
 
 export default getInputs
